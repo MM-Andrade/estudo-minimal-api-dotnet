@@ -6,12 +6,21 @@ using TodoAPI.Model;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbServices(builder.Configuration);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
-//MapGroup API
+//Configuração do Swagger
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-var todoItems = app.MapGroup("/todoitems");
+//TypedResult API
+var todoItems = app.MapGroup("/todoitems").WithOpenApi();
 
 todoItems.MapGet("/", GetAllTodos);
 todoItems.MapGet("/complete", GetCompleteTodos);
